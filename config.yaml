@@ -1,0 +1,16 @@
+filters:
+  - price:
+    - collection_name: "Toy Bear"
+      buy_price: 100
+    - collection_name: "Flying Broom"
+      buy_price: 10
+    - collection_name: "Loot Bag"
+      buy_price: 1000
+    - collection_name: "Homemade Cake"
+      buy_price: 1000
+    - collection_name: "Party Sparkler"
+      buy_price: 1000
+    - collection_name: "Spiced Wine"
+      buy_price: 1000
+    - collection_name: "Diamond Ring"
+      buy_price: 1000

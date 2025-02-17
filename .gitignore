@@ -1,0 +1,5 @@
+logs/
+heap/
+local_storage.json
+logs.txt
+chromedriver
