@@ -17,7 +17,7 @@ logger.add(
     f"{LOG_DIR}/app.log",
     rotation="5 MB",
     compression="zip",
-    format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{line} - {message}",
+    format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} | {message}",
     level="INFO",
 )
 

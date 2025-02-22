@@ -1,8 +1,7 @@
 import json
 import sys
-from typing import Callable, ContextManager
 
-from src.logs.task_progress import TaskProgressManager
+from src.logs.log import log
 
 
 class LocalStorageManager:
@@ -11,7 +10,6 @@ class LocalStorageManager:
     def __init__(
         self,
         driver,
-        task: Callable[[str], ContextManager[TaskProgressManager]],
         local_storage_path,
     ):
         """
@@ -25,36 +23,27 @@ class LocalStorageManager:
         self.driver = driver
         self.local_storage_path = local_storage_path
 
-        self.task = task
-
     def load_local_storage(self):
         """Loads data into localStorage from a JSON file."""
-        with self.task("Try to loading local storage") as t:
-            try:
-                with open(self.local_storage_path, "r", encoding="utf-8") as file:
-                    data = json.load(file)
+        log.info("Loading local storage to WebBrowser")
+        try:
+            with open(self.local_storage_path, "r", encoding="utf-8") as file:
+                data = json.load(file)
 
-                    for key, value in data.items():
-                        self._add_local_storage_item(key, value)
+                for key, value in data.items():
+                    self._add_local_storage_item(key, value)
 
-                t.complete_task()
+        except json.JSONDecodeError:
+            log.error("JSON file is not formatted correctly")
+            sys.exit(1)
 
-            except json.JSONDecodeError:
-                t.complete_task(
-                    desc="JSON file is not formatted correctly", status="error"
-                )
-                sys.exit(1)
+        except FileNotFoundError:
+            log.error(f"local storage file not found: {self.local_storage_path}")
+            sys.exit(1)
 
-            except FileNotFoundError:
-                t.complete_task(
-                    desc=f"local storage file not found: {self.local_storage_path}",
-                    status="error",
-                )
-                sys.exit(1)
-
-            except Exception as e:
-                t.complete_task(desc=f"Storage error: {e}", status="error")
-                sys.exit(1)
+        except Exception as e:
+            log.exception(f"Storage error: {e}")
+            sys.exit(1)
 
     def _add_local_storage_item(self, key, value):
         """

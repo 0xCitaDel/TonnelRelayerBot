@@ -6,34 +6,36 @@ from src.browser.actions import Actions
 from src.browser.browser_manager import BrowserManager
 from src.browser.local_storage import LocalStorageManager
 from src.browser.parser import TonnelRelayerParser
+
 from src.constants import CONFIG_PATH, DRIVER_PATH, LOCAL_STORAGE_JSON_PATH
+
+from src.logs.log import log
 from src.logs.progress import ProgressManager
+
 from src.utils.new_elements_tracker import NewElementsTracker
 
 
 class BotLauncher(ProgressManager):
     def __init__(self):
         super().__init__()
-        self.browser = BrowserManager(driver_path=DRIVER_PATH, task=self.task)
+        self.browser = BrowserManager(driver_path=DRIVER_PATH)
         self.local_storage = LocalStorageManager(
             driver=self.browser.driver,
-            task=self.task,
             local_storage_path=LOCAL_STORAGE_JSON_PATH
         )
-        self.actions = Actions(driver=self.browser.driver, task=self.task)
+        self.actions = Actions(driver=self.browser.driver)
         self.parser = TonnelRelayerParser(driver=self.browser.driver, config_path=CONFIG_PATH)
 
         # Temp decision
         self.tracker: NewElementsTracker = NewElementsTracker()
 
     def run(self):
-        with self.task('Start main task') as t:
-            try:
-                self.initialization()
-            except Exception as e:
-                t.complete_task(desc=f"❌ Unexpected error: {e}", status="error")
-            finally:
-                self.browser.close_browser()
+        try:
+            self.initialization()
+        except Exception as e:
+            log.exception(f"Unexpected error: {e}")
+        finally:
+            self.browser.close_browser()
 
     def initialization(self):
         START_PAGE_URL = 'https://web.telegram.org/a/'
@@ -44,6 +46,7 @@ class BotLauncher(ProgressManager):
         self.local_storage.load_local_storage()
 
         self.browser.refresh_page()
+
 
         self.actions.force_click_element(By.XPATH, "//a[@href='#6013927118']")
         self.actions.force_click_element(By.CSS_SELECTOR, ".bot-menu-text")
@@ -64,7 +67,7 @@ class BotLauncher(ProgressManager):
             self.actions.force_click_element(
                 By.XPATH, '//*[@id="root"]/div/div[4]/div/div/a[1]'
             )
-            time.sleep(4)
+            time.sleep(2)
             nfts = self.parser.check_by_name_and_price()
             new_items = self.tracker.check_new(nfts)
 

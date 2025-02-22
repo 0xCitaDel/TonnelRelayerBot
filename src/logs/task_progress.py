@@ -3,10 +3,10 @@ from typing import Optional, Type
 
 from rich.progress import Progress, TaskID
 
-from src.logs.log import LogManager, LOG_SYMBOLS
+from src.logs.log import LOG_SYMBOLS
 
 
-class TaskProgressManager(LogManager):
+class TaskProgressManager():
 
     def __init__(
         self,
@@ -22,6 +22,7 @@ class TaskProgressManager(LogManager):
         self.task_completed = False
 
     def __enter__(self):
+
         desc = self._get_indented_desc()
         self.task_id = self.progress.add_task(desc, total=1, status=" ")
 
@@ -51,19 +52,15 @@ class TaskProgressManager(LogManager):
             self.task_error(desc)
 
     def task_info(self, desc):
-        self.info_log(desc)
         self.update_task(desc, LOG_SYMBOLS["info"])
 
     def task_succees(self, desc):
-        self.info_log(desc)
         self.update_task(desc, LOG_SYMBOLS["success"])
 
     def task_warning(self, desc):
-        self.warn_log(desc)
         self.update_task(desc, LOG_SYMBOLS["warning"])
 
     def task_error(self, desc):
-        self.err_log(desc)
         self.update_task(desc, LOG_SYMBOLS["error"])
 
     def update_task(self, desc, symbol):
