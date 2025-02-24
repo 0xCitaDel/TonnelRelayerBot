@@ -16,8 +16,8 @@ from src.utils.new_elements_tracker import NewElementsTracker
 
 
 class BotLauncher(ProgressManager):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, task_disable: bool):
+        super().__init__(task_disable)
         self.browser = BrowserManager(driver_path=DRIVER_PATH)
         self.local_storage = LocalStorageManager(
             driver=self.browser.driver,
@@ -41,12 +41,13 @@ class BotLauncher(ProgressManager):
         START_PAGE_URL = 'https://web.telegram.org/a/'
         START_PAGE_LOADED_CHECK = '.qr-container'
 
-        self.browser.open_page(START_PAGE_URL, START_PAGE_LOADED_CHECK)
+        with self.task('Open browser') as t:
+            self.browser.open_page(START_PAGE_URL, START_PAGE_LOADED_CHECK)
 
         self.local_storage.load_local_storage()
 
         self.browser.refresh_page()
-
+        time.sleep(1000)
 
         self.actions.force_click_element(By.XPATH, "//a[@href='#6013927118']")
         self.actions.force_click_element(By.CSS_SELECTOR, ".bot-menu-text")

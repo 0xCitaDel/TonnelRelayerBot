@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 from types import TracebackType
-from typing import Iterator, Optional, Type, overload
+from typing import Iterator, Optional, Type
 
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
@@ -9,11 +9,12 @@ from src.logs.task_progress import TaskProgressManager
 
 class ProgressManager:
 
-    def __init__(self):
+    def __init__(self, task_disable: bool):
         self.spinner = SpinnerColumn(style="bold yellow")
         self.progress = Progress(
             self.spinner,
             TextColumn("{task.fields[status]} {task.description}"),
+            disable=task_disable,
         )
         self.indent_level = 0
 
@@ -32,9 +33,7 @@ class ProgressManager:
     @contextmanager
     def task(self, desc) -> Iterator[TaskProgressManager]:
         task_ctx = TaskProgressManager(
-            progress=self.progress,
-            desc=desc,
-            indent_level=self.indent_level
+            progress=self.progress, desc=desc, indent_level=self.indent_level
         )
 
         self.indent_level += 1

@@ -4,7 +4,7 @@ import yaml
 from seleniumwire import webdriver
 from seleniumwire.utils import decode
 
-from src.constants import API_LIST_GIFTS
+from src.constants import API_LIST_GIFTS_URL
 
 
 class PageParser:
@@ -25,12 +25,13 @@ class TonnelRelayerParser(PageParser):
         super().__init__(driver)
         self.config = self.load_config(config_path)
 
+
     def load_config(self, path):
         with open(path, "r", encoding="utf-8") as file:
             return yaml.safe_load(file)
 
     def get_gifts(self):
-        data = self.get_fetch_requests(API_LIST_GIFTS)
+        data = self.get_fetch_requests(API_LIST_GIFTS_URL)
         if data:
             return json.loads(data)
 
@@ -53,3 +54,4 @@ class TonnelRelayerParser(PageParser):
         print('\n\n\n\n\n\n')
 
         return filtered_nfts
+

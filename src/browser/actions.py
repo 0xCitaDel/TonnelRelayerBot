@@ -7,7 +7,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from src.logs.log import log
-from src.logs.task_progress import TaskProgressManager
 
 
 class Actions:

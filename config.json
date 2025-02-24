@@ -1,0 +1,38 @@
+{
+    "debug": true,
+    "selenium": {
+        "headless": false,
+        "implicitly_wait": 10,
+        "page_load_timeout": 30,
+        "use_proxy": true,
+        "proxy": {
+            "http": "http://127.0.0.1:8080",
+            "https": "https://127.0.0.1:8080",
+            "no_proxy": "localhost,127.0.0.1"
+        }
+    },
+    "headers": {
+        "https://gifts2.tonnel.network": {
+            "sec-ch-ua-platform": "\"macOS\"",
+            "user-agen": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+            "sec-ch-ua": "\"Not(A:Brand\";v=\"99\", \"Google Chrome\";v=\"133\", \"Chromium\";v=\"133\"",
+            "content-type": "application/json",
+            "sec-ch-ua-mobile": "?0",
+            "accept": "*/*",
+            "origin": "https://tonnel-gift.vercel.app",
+            "sec-fetch-site": "cross-site",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "https://tonnel-gift.vercel.app/",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
+            "priority": "u=1, i"
+        }
+    },
+    "logging": {
+        "level": "INFO",
+        "log_to_file": true,
+        "log_filename": "parser.log"
+    }
+}
+

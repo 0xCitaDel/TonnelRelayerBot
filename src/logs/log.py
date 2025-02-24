@@ -2,9 +2,11 @@
 
 import os
 import platform
+import sys
 from typing import Dict
 
 from loguru import logger
+from src.config import config
 
 LOG_DIR = "logs"
 
@@ -12,31 +14,29 @@ logger.remove()
 
 os.makedirs(LOG_DIR, exist_ok=True)
 
+
+if config.is_debug:
+    # Logging to the console
+    logger.add(
+        sys.stdout,
+        format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | "
+        "<level>{level}</level> | "
+        "<cyan>{module}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> | "
+        "<level>{message}</level>",
+        level="DEBUG",
+        colorize=True,
+    )
+
 # Logging to the file
 logger.add(
     f"{LOG_DIR}/app.log",
     rotation="5 MB",
     compression="zip",
     format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} | {message}",
-    level="INFO",
+    level="DEBUG",
 )
 
 log = logger
-
-
-class LogManager:
-
-    def __init__(self):
-        self.log = log
-
-    def info_log(self, message):
-        log.info(message)
-
-    def warn_log(self, message):
-        log.warning(message)
-
-    def err_log(self, message):
-        log.error(message)
 
 
 class LogSymbols:
