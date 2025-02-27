@@ -1,20 +1,13 @@
-from collections import deque
+from typing import Dict, List, Optional, Set
 
 
 class NewElementsTracker:
 
-    def __init__(self, max_size=10):
+    def __init__(self):
         """Tracker with a fixed-size memory of last seen items."""
-        self.known_items = set()
-        self.recent_items = deque(
-            maxlen=max_size
-        )
+        self.known_items: Set[frozenset] = set()
 
-    def _hash_dict(self, item):
-        """Generate a unique, immutable hash for a dictionary."""
-        return frozenset(item.items())
-
-    def _hash_dict_recursive(self, item):
+    def _hash_dict_recursive(self, item: Dict):
         """Recursively converts a dictionary into a hashable, immutable frozenset."""
 
         def make_hashable(obj):
@@ -24,23 +17,24 @@ class NewElementsTracker:
                 )
             elif isinstance(obj, list):  # Convert lists to tuples to make them hashable
                 return tuple(make_hashable(x) for x in obj)
+
             return obj  # Immutable types remain unchanged
 
         return make_hashable(item)
 
-    def check_new(self, new_data):
+    def check_new_elements(self, data: Optional[List[Dict]]) -> list:
         """Check for new elements while keeping only recent ones."""
         new_items = []
-        for item in new_data:
-            hashed = self._hash_dict_recursive(item)
-            if hashed not in self.known_items:
-                new_items.append(item)
+        new_item_hashes = set()
 
-                # Add new item to tracking (remove oldest if over limit)
-                self.recent_items.append(hashed)
-                self.known_items.add(hashed)
+        if data:
+            for item in data:
+                hashed = self._hash_dict_recursive(item)
+                new_item_hashes.add(hashed)
 
-        # Remove old items that fell out of `deque`
-        self.known_items.intersection_update(self.recent_items)
+                if hashed not in self.known_items:
+                    new_items.append(item)
+
+            self.known_items = new_item_hashes
 
         return new_items

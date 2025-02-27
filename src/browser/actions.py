@@ -1,5 +1,3 @@
-from typing import Callable, ContextManager
-
 from selenium.common.exceptions import (ElementClickInterceptedException,
                                         NoSuchElementException,
                                         TimeoutException)

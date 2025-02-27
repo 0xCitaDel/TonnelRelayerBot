@@ -2,16 +2,14 @@ import time
 
 from selenium.webdriver.common.by import By
 
+from src.bot.http_client import http_coffin
 from src.browser.actions import Actions
 from src.browser.browser_manager import BrowserManager
 from src.browser.local_storage import LocalStorageManager
 from src.browser.parser import TonnelRelayerParser
-
 from src.constants import CONFIG_PATH, DRIVER_PATH, LOCAL_STORAGE_JSON_PATH
-
 from src.logs.log import log
 from src.logs.progress import ProgressManager
-
 from src.utils.new_elements_tracker import NewElementsTracker
 
 
@@ -20,14 +18,16 @@ class BotLauncher(ProgressManager):
         super().__init__(task_disable)
         self.browser = BrowserManager(driver_path=DRIVER_PATH)
         self.local_storage = LocalStorageManager(
-            driver=self.browser.driver,
-            local_storage_path=LOCAL_STORAGE_JSON_PATH
+            driver=self.browser.driver, local_storage_path=LOCAL_STORAGE_JSON_PATH
         )
         self.actions = Actions(driver=self.browser.driver)
-        self.parser = TonnelRelayerParser(driver=self.browser.driver, config_path=CONFIG_PATH)
 
         # Temp decision
         self.tracker: NewElementsTracker = NewElementsTracker()
+
+        self.parser = TonnelRelayerParser(
+            driver=self.browser.driver, filters_path=CONFIG_PATH, tracker=self.tracker
+        )
 
     def run(self):
         try:
@@ -38,16 +38,15 @@ class BotLauncher(ProgressManager):
             self.browser.close_browser()
 
     def initialization(self):
-        START_PAGE_URL = 'https://web.telegram.org/a/'
-        START_PAGE_LOADED_CHECK = '.qr-container'
+        START_PAGE_URL = "https://web.telegram.org/a/"
+        START_PAGE_LOADED_CHECK = ".qr-container"
 
-        with self.task('Open browser') as t:
+        with self.task("Open browser"):
             self.browser.open_page(START_PAGE_URL, START_PAGE_LOADED_CHECK)
 
         self.local_storage.load_local_storage()
 
         self.browser.refresh_page()
-        time.sleep(1000)
 
         self.actions.force_click_element(By.XPATH, "//a[@href='#6013927118']")
         self.actions.force_click_element(By.CSS_SELECTOR, ".bot-menu-text")
@@ -68,14 +67,16 @@ class BotLauncher(ProgressManager):
             self.actions.force_click_element(
                 By.XPATH, '//*[@id="root"]/div/div[4]/div/div/a[1]'
             )
-            time.sleep(2)
-            nfts = self.parser.check_by_name_and_price()
-            new_items = self.tracker.check_new(nfts)
+            time.sleep(1)
 
-            if not new_items:
-                print("No new items")
-            else:
-                print('---------------- NEW_ITEMS ---------------- ')
-                for i in new_items:
-                    print(f'{i['name']} - {i['model']}: {i['price']} TON')
-            time.sleep(2)
+            filtered_nfts = self.parser.filter_by_config()
+
+            for gift in filtered_nfts:
+                auth_data = self.parser.get_balance_info["authData"]
+                respone = http_coffin.buy_gift(
+                    auth_data, gift_id=gift["gift_id"], price=gift["price"]
+                )
+                print(respone)
+                time.sleep(1000)
+
+            time.sleep(100)
