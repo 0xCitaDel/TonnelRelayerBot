@@ -79,4 +79,3 @@ class BotLauncher(ProgressManager):
                 print(respone)
                 time.sleep(1000)
 
-            time.sleep(100)

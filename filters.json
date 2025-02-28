@@ -1,29 +1,64 @@
 [
     {
-        "gift_name": "Record Player",
-        "model": null,
-        "price_range": [0, 100],
-        "currency": "TON",
-        "gift_ids": [6, 66, 666, 6666]
-    },
-    {
-        "gift_name": "Lol Pop",
-        "model": null,
-        "price_range": [0, 100],
+        "gift_name": "Witch Hat",
+        "model": "Sylvester (0.5%)",
+        "price_range": [0, 1.5],
         "currency": "TON",
         "gift_ids": []
     },
     {
-        "gift_name": "Top Hat",
-        "model": null,
-        "price_range": [0, 100],
+        "gift_name": "Witch Hat",
+        "model": "Batkeeper (0.5%)",
+        "price_range": [0, 2],
         "currency": "TON",
         "gift_ids": []
     },
     {
-        "gift_name": "Desk Calendar",
-        "model": null,
-        "price_range": [0, 100],
+        "gift_name": "Witch Hat",
+        "model": "Dark Side (0.5%)",
+        "price_range": [0, 1.5],
+        "currency": "TON",
+        "gift_ids": []
+    },
+    {
+        "gift_name": "Witch Hat",
+        "model": "Sorting Cat (0.5%)",
+        "price_range": [0, 1.8],
+        "currency": "TON",
+        "gift_ids": []
+    },
+    {
+        "gift_name": "Witch Hat",
+        "model": "Alchemy (0.5%)",
+        "price_range": [0, 1],
+        "currency": "TON",
+        "gift_ids": []
+    },
+    {
+        "gift_name": "Voodoo Doll",
+        "model": "Scribble Stab (0.4%)",
+        "price_range": [0, 3.5],
+        "currency": "TON",
+        "gift_ids": []
+    },
+    {
+        "gift_name": "Voodoo Doll",
+        "model": "Disco Doll (0.4%)",
+        "price_range": [0, 2],
+        "currency": "TON",
+        "gift_ids": []
+    },
+    {
+        "gift_name": "Voodoo Doll",
+        "model": "Cruella (0.5%)",
+        "price_range": [0, 5],
+        "currency": "TON",
+        "gift_ids": []
+    },
+    {
+        "gift_name": "Voodoo Doll",
+        "model": "Shrek (1%)",
+        "price_range": [0, 1.3],
         "currency": "TON",
         "gift_ids": []
     }
